@@ -1,25 +1,10 @@
-# source files.
-SRC = assert_test.cpp
-OBJ = $(SRC:.cpp=.o)
-
-# include directories
-INCLUDES = 
-
-# C++ compiler flags (-g -O2 -Wall)
-CCFLAGS = -O3 -I../../include 
-LDFLAGS = -L../../lib -lphiprof -lgomp
-# compiler
+INCLUDES = -I../..
+CCFLAGS = -O3 
 CCC = mpic++
 
+assert_test: assert_test.cpp
+	$(CCC) $(INCLUDES) $(CCFLAGS) $< -o $@
 
-.SUFFIXES: .cpp
-
-default: $(OBJ) 
-	$(CCC) -o assert_test  $(OBJ) $(LDFLAGS) 
-
-.cpp.o:
-	$(CCC) $(INCLUDES) $(CCFLAGS) -c $< -o $@
-
+c: clean
 clean:
-	rm -f $(OBJ) assert_test
-
+	rm -f $(OBJ) assert_test profile*txt

@@ -1,26 +1,10 @@
-# source files.
-SRC = test.cpp
-OBJ = $(SRC:.cpp=.o)
+INCLUDES = -I../..
+CCFLAGS = -O3 
+CCC = mpic++
 
-# include directories
-INCLUDES = 
+test: test.cpp
+	$(CCC) $(INCLUDES) $(CCFLAGS) $< -o $@
 
-# C++ compiler flags (-g -O2 -Wall)
-CCFLAGS = -O3 -I../../include 
-LDFLAGS = -L../../lib -lphiprof
-# compiler
-CCC = mpiCC
-
-
-.SUFFIXES: .cpp
-
-default: $(OBJ) 
-	$(CCC) -o test  $(OBJ) $(LDFLAGS) 
-
-.cpp.o:
-	$(CCC) $(INCLUDES) $(CCFLAGS) -c $< -o $@
-
+c: clean
 clean:
-	rm -f $(OBJ) test
-
-
+	rm -f $(OBJ) test profile*txt
