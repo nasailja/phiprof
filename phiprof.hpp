@@ -507,7 +507,7 @@ public:
 
       //get full hierarchical name for a timer
       //can have either the timer-label first (reverse order), or last.
-      std::string getFullLabel(const std::vector<TimerData> &timers,int id,bool reverse=false){
+      std::string getFullLabel(const std::vector<TimerData>& /*timers*/,int id,bool reverse=false){
          //create a label with all hierarchical levels     
          std::vector<std::string> labels;
          while(id>0){
