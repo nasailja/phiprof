@@ -1,5 +1,5 @@
 INCLUDES = -I../..
-CCFLAGS = -O3 
+CCFLAGS = -std=c++11 -O3
 CCC = mpic++
 
 assert_test: assert_test.cpp

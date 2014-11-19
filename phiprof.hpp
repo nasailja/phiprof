@@ -15,6 +15,10 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+Modified in 2014-11-19 from the version at
+https://github.com/fmihpc/phiprof see
+https://github.com/nasailja/phiprof for details
 */
 
 #ifndef PHIPROF_HPP
@@ -44,23 +48,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 
-#ifndef NDEBUG
-#define phiprof_assert2(a,b) phiprof::phiprofAssert( a, b, __FILE__, __LINE__ )
-#define phiprof_assert1(a) phiprof::phiprofAssert( a, #a, __FILE__, __LINE__ )
-#else
-#define phiprof_assert2(a,b)
-#define phiprof_assert1(a) 
-#endif
-#define GET_MACRO(_1,_2,NAME,...) NAME
-#define phiprof_assert(...) GET_MACRO(__VA_ARGS__, phiprof_assert2, phiprof_assert1)(__VA_ARGS__)
-
-
 namespace phiprof
 {
-      
-   namespace 
-   {
-      struct TimerData{
+
+class Phiprof {
+public:
+
+     struct TimerData{
 	 std::string label;          //print label 
 	 std::string workUnitLabel;   //unit for the counter workUnitCount
 	 double workUnits;        // how many units of work have we done. If -1 it is not counted, or printed
@@ -126,8 +120,6 @@ namespace phiprof
       const int _intWidth=6;   //width of int fields;
       const int _unitWidth=4;  //width of workunit label
       const int _levelWidth=5; //width of level label
-
-   } // namespace
 
       //this function returns the time in seconds 
       double getTime() {
@@ -472,8 +464,6 @@ namespace phiprof
    }
 
    
-   namespace 
-   {
 ////-------------------------------------------------------------------------
 ///  Hash functions
 ////-------------------------------------------------------------------------      
@@ -655,7 +645,7 @@ namespace phiprof
 
       }
 
-      
+
 //collect timer stats, call children recursively. In original code this should be called for the first id=0
 // reportRank is the rank to be used in the report, not the rank in the comm communicator
       void collectTimerStats(TimerStatistics &stats,const std::vector<TimerData> &timers,MPI_Comm &comm,int reportRank,int id=0,int parentIndex=0){
@@ -781,7 +771,7 @@ namespace phiprof
             time.clear();
             timeRank.clear();
             count.clear();
-	    threads.clear();
+            threads.clear();
             workUnits.clear();
             parentIndices.clear();
          }
@@ -1300,8 +1290,6 @@ namespace phiprof
          return success;
 
       }
-   } // namespace
-
 
    
   /**
@@ -1451,7 +1439,7 @@ namespace phiprof
       }
       return true;
    }
-   
+
    /**
    * Assert function
    *
@@ -1473,8 +1461,8 @@ namespace phiprof
    void phiprofAssert(
       bool condition,
       const std::string& error_message,
-      const std::string& file,
-      int line
+      const std::string& file = "",
+      int line = 0
    ) {
 #ifndef NDEBUG
       if(!condition) {
@@ -1493,7 +1481,8 @@ namespace phiprof
       return;
    }
 
-}
+}; // class Phiprof
+} // namespace phiprof
 
 
 #endif

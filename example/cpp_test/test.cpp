@@ -57,76 +57,74 @@ int main(int argc,char **argv){
    if(rank==0)
       cout << "Measuring performance of start-stop calls" <<endl;
 
-   
-   phiprof::start("Benchmarking phiprofr"); 
-   phiprof::start("Initalized timers using ID");
+   phiprof::Phiprof profiler;
+   profiler.start("Benchmarking phiprofr"); 
+   profiler.start("Initalized timers using ID");
 
    if(rank==0)
       cout << "  1/3" <<endl;
-   int id_a=phiprof::initializeTimer("a","A with ID");
+   int id_a=profiler.initializeTimer("a","A with ID");
    for(int i=0;i<nIterations;i++){
-      phiprof::start(id_a);
-      phiprof::stop(id_a);
+      profiler.start(id_a);
+      profiler.stop(id_a);
    }
-   phiprof::stop("Initalized timers using ID",nIterations,"start-stop");
+   profiler.stop("Initalized timers using ID",nIterations,"start-stop");
 
    if(rank==0)
       cout << "  2/3" <<endl;
-   phiprof::start("Re-initialized timers using ID");
+   profiler.start("Re-initialized timers using ID");
    for(int i=0;i<nIterations;i++){
-      id_a=phiprof::initializeTimer("a","A with ID");
-      phiprof::start(id_a);
-      phiprof::stop(id_a);
+      id_a=profiler.initializeTimer("a","A with ID");
+      profiler.start(id_a);
+      profiler.stop(id_a);
    }
-   phiprof::stop("Re-initialized timers using ID",nIterations,"start-stop");
+   profiler.stop("Re-initialized timers using ID",nIterations,"start-stop");
 
    if(rank==0)
       cout << "  3/3" <<endl;
-   phiprof::start("Timers using labels");
+   profiler.start("Timers using labels");
    for(int i=0;i<nIterations;i++){
-      phiprof::start("a");
-      phiprof::stop("a");
+      profiler.start("a");
+      profiler.stop("a");
    }
-   phiprof::stop("Timers using labels",nIterations*2,"start-stop");
-   phiprof::stop("Benchmarking phiprofr"); 
+   profiler.stop("Timers using labels",nIterations*2,"start-stop");
+   profiler.stop("Benchmarking phiprofr"); 
 
    MPI_Barrier(MPI_COMM_WORLD);
 
    if(rank==0)
       cout << "Measuring accuracy" <<endl;
-   phiprof::start("Test accuracy");
+   profiler.start("Test accuracy");
    if(rank==0)
       cout << "  1/2" <<endl;
-   phiprof::start("100x0.1s computations"); 
+   profiler.start("100x0.1s computations"); 
    for(int i=0;i<100;i++){
-      phiprof::start("compute");
+      profiler.start("compute");
       compute(0.1);
-      phiprof::stop("compute");
+      profiler.stop("compute");
    }
-   phiprof::stop("100x0.1s computations");
+   profiler.stop("100x0.1s computations");
 
    if(rank==0)
       cout << "  2/2" <<endl;
    MPI_Barrier(MPI_COMM_WORLD);
-   phiprof::start("100x0.1s computations + logprofile"); 
+   profiler.start("100x0.1s computations + logprofile"); 
    for(int i=0;i<100;i++){
-      phiprof::start("compute");
+      profiler.start("compute");
       compute(0.1);
-      phiprof::printLogProfile(MPI_COMM_WORLD,i);
-      phiprof::printLogProfile(MPI_COMM_WORLD,i,"profile_log_maxlev1"," ",1);
-      phiprof::stop("compute");
+      profiler.printLogProfile(MPI_COMM_WORLD,i);
+      profiler.printLogProfile(MPI_COMM_WORLD,i,"profile_log_maxlev1"," ",1);
+      profiler.stop("compute");
    }
-   phiprof::stop("100x0.1s computations + logprofile"); 
+   profiler.stop("100x0.1s computations + logprofile"); 
 
-   phiprof::stop("Test accuracy");
+   profiler.stop("Test accuracy");
    
    MPI_Barrier(MPI_COMM_WORLD);
    double t1=MPI_Wtime();
-   phiprof::print(MPI_COMM_WORLD);
-   phiprof::print(MPI_COMM_WORLD,"profile_minfrac0.01",0.01);
-   if(rank==0)   
-      cout<< "Print time is "<<MPI_Wtime()-t1<<endl;
-//   phiprof::print(MPI_COMM_WORLD,0.1);
+   profiler.print(MPI_COMM_WORLD);
+   profiler.print(MPI_COMM_WORLD,"profile_minfrac0.01",0.01);
+   if(rank==0) cout<< "Print time is "<<MPI_Wtime()-t1<<endl;
 
    MPI_Finalize();
 }

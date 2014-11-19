@@ -30,18 +30,19 @@ int main(int argc,char **argv){
    MPI_Comm_rank(MPI_COMM_WORLD,&rank);
    MPI_Comm_size(MPI_COMM_WORLD,&nprocs);
 
-   phiprof::start("Greeting");
+   phiprof::Phiprof profiler;
+   profiler.start("Greeting");
    cout << "Hello world from rank " << rank << endl;
-   phiprof::start("second");
-   phiprof_assert(rank==0 && nprocs!=5,"5 tasks encountered using  phiprof_assert(a,b)");
-   phiprof_assert(rank==0 && nprocs!=4);
-   phiprof::phiprofAssert(rank==0 && nprocs!=3,"3 tasks for phiprof::phiprofAssert", __FILE__, __LINE__);
+   profiler.start("second");
+   profiler.phiprofAssert(rank==0 && nprocs!=5,"5 tasks encountered using  phiprof_assert(a,b)");
+   profiler.phiprofAssert(rank==0 && nprocs!=4, __FILE__);
+   profiler.phiprofAssert(rank==0 && nprocs!=3,"3 tasks for profiler.phiprofAssert", __FILE__, __LINE__);
 
-   phiprof::stop("second");
-   phiprof::stop("Greeting", 1, "greetings");
+   profiler.stop("second");
+   profiler.stop("Greeting", 1, "greetings");
 
    MPI_Barrier(MPI_COMM_WORLD);
-   phiprof::print(MPI_COMM_WORLD);
+   profiler.print(MPI_COMM_WORLD);
    if (rank == 0) {
       cout << "Profiling results were printed into profile_*.txt" << endl;
    }

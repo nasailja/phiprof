@@ -28,12 +28,13 @@ int main(int argc,char **argv){
    MPI_Init(&argc,&argv);
    MPI_Comm_rank(MPI_COMM_WORLD,&rank);
 
-   phiprof::start("Greeting");
+   phiprof::Phiprof profiler;
+   profiler.start("Greeting");
    std::cout << "Hello world from rank " << rank << std::endl;
-   phiprof::stop("Greeting", 1, "greetings");
+   profiler.stop("Greeting", 1, "greetings");
 
    MPI_Barrier(MPI_COMM_WORLD);
-   phiprof::print(MPI_COMM_WORLD);
+   profiler.print(MPI_COMM_WORLD);
    if (rank == 0) {
 	   std::cout << "Profiling results were printed into profile_*.txt" << std::endl;
    }

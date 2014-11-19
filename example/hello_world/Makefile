@@ -1,13 +1,10 @@
 # include directories
 INCLUDES = -I ../..
 
-# C++ compiler flags (-g -O2 -Wall)
-CCFLAGS = -O3
+# C++ compiler flags
+CCFLAGS = -std=c++11 -O3
 # compiler
 CCC = mpic++
-
-
-.SUFFIXES: .cpp
 
 hello_world: hello_world.cpp
 	$(CCC) $(INCLUDES) $(CCFLAGS) $< -o $@
